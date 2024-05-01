@@ -19,7 +19,7 @@ int Selector_init( const struct Selector *sel  ){
 int Selector_mapInput( struct Selector *sel)
 {
   int err = -1;
-  uint8_t value;
+  uint8_t value = 0;
   for(  int i = 0; i < sel->sizePinOrder; i++ )
   {
     value |= ( digitalRead(sel->pinOrder[i]) )<<i;
