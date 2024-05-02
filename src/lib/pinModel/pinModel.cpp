@@ -30,7 +30,7 @@ int pinModel_init(  struct pinModel *pm )
     else if (pm->type == TYPE_READ_ANALOG  )
     {
       #if defined(__AVR_ATmega328P__) 
-      if ( pm->pinNumber >= A0 &&  pm->pinNumber <= A7 ){
+      if ( pm->pinNumber >= A0 &&  pm->pinNumber <= A5 ){
         pm->value = analogRead( pm->pinNumber );
       }
       else{

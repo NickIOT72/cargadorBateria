@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "Convertion.h"
 #include "modules/Selector/Selector.h"
 #include "lib/pinModel/pinModel.h"
 #include "lib/ledModel/ledModel.h"
@@ -20,11 +21,15 @@ void zerocrossdectectorFunc();
 #define TRIGGER_TRIAC_PIN PD5 
 #define ZEROCROSSDETECTOR_PIN PD2
 #define LEDSTATUSCARGA_PIN PD7
+#define ADC_VOLT80VDC PC0
+#define ADC_POTCARGA PC1
 
 struct Selector selectorVoltaje;// Selector de voltaje
 struct pinModel pin_trigger_TRIAC;// disparador para el triac
 struct pinModel pin_zerocrossdetector;// detector de cruce por cero
 struct ledModel pin_ledStatusCarga; // Led status de carga;
+struct pinModel pin_volt_80vdc;// lectura adc de carga de bateria
+struct pinModel pin_pot_carga;// lectura adc de carga de bateria
 
 int countdetector = 0;
 void zerocrossdectectorFunc( )
@@ -98,4 +103,17 @@ void configuraPinOut()
   pin_ledStatusCarga.delayON = 50;
   ledModel_init( &pin_ledStatusCarga );
 
+  /************************* Pin adc voltimetro 80vdc *****************/
+  pin_volt_80vdc.pinNumber = ADC_VOLT80VDC;
+  pin_volt_80vdc.Mode = INPUT;
+  pin_volt_80vdc.type = TYPE_READ_ANALOG;
+  pin_volt_80vdc.interruption = INTERRUPTION_NONE;
+  pinModel_init(&pin_volt_80vdc);
+
+  /************************* Pin adc potenciometro carga *****************/
+  pin_pot_carga.pinNumber = ADC_POTCARGA;
+  pin_pot_carga.Mode = INPUT;
+  pin_pot_carga.type = TYPE_READ_ANALOG;
+  pin_pot_carga.interruption = INTERRUPTION_NONE;
+  pinModel_init(&pin_pot_carga);
 }
