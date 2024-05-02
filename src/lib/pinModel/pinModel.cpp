@@ -14,14 +14,20 @@ int pinModel_init(  struct pinModel *pm )
   pinMode( pm->pinNumber , pm->Mode);
   if( pm->Mode == OUTPUT )
   {
-    digitalWrite( pm->pinNumber, pm->value );
+    if ( pm->type == TYPE_WRITE_DIGITAL ){
+      digitalWrite( pm->pinNumber, pm->value );
+    }
+    else if (  pm->type == TYPE_WRITE_ANALOG )
+    {
+      analogWrite( pm->pinNumber, pm->value  );
+    }
   }
   else{
-    if (pm->type_read == TYPE_READ_DIGITAL )
+    if (pm->type== TYPE_READ_DIGITAL )
     {
       pm->value = digitalRead( pm->pinNumber );
     }
-    else if (pm->type_read == TYPE_READ_ANALOG  )
+    else if (pm->type == TYPE_READ_ANALOG  )
     {
       #if defined(__AVR_ATmega328P__) 
       if ( pm->pinNumber >= A0 &&  pm->pinNumber <= A7 ){
@@ -72,7 +78,13 @@ int pinModel_setPinValue( struct pinModel *pm )
   int err = -1;
   if( pm->Mode == OUTPUT )
   {
-    digitalWrite( pm->pinNumber, pm->value );
+    if ( pm->type == TYPE_WRITE_DIGITAL ){
+      digitalWrite( pm->pinNumber, pm->value );
+    }
+    else
+    {
+      analogWrite( pm->pinNumber, pm->value  );
+    }
   }
   else 
   {
@@ -86,11 +98,11 @@ int pinModel_getPinValue( struct pinModel *pm )
   int err = -1;
   if( pm->Mode == INPUT ||  pm->Mode == INPUT_PULLUP )
   {
-    if (  pm->type_read == TYPE_READ_DIGITAL )
+    if (  pm->type == TYPE_READ_DIGITAL )
     {
       pm->value = digitalRead( pm->pinNumber );
     }
-    else if (  pm->type_read == TYPE_READ_ANALOG )
+    else if (  pm->type == TYPE_READ_ANALOG )
     {
       pm->value = analogRead( pm->pinNumber);
     }
