@@ -1,5 +1,4 @@
 #include "pinModel.h"
-#include <YetAnotherPcInt.h>
 
 #define ERROR_WRONG_ANALOG_PINS 0 
 #define ERROR_WRONGATTACHINTPIN 1
@@ -41,7 +40,8 @@ int pinModel_init(  struct pinModel *pm )
     {
       #if defined(__AVR_ATmega328P__) 
       if ( pm->pinNumber == PD2 &&  pm->pinNumber == PD3 ){
-        attachInterrupt(digitalPinToInterrupt(pm->pinNumber), pm->void_interruption , pm->flag_interruption);
+        int h = 0;
+        //attachInterrupt(digitalPinToInterrupt(pm->pinNumber), pm->void_interruption , pm->flag_interruption);
       }
       else{
         err = ERROR_WRONGATTACHINTPIN;
@@ -53,7 +53,9 @@ int pinModel_init(  struct pinModel *pm )
     {
       #if defined(__AVR_ATmega328P__) 
       if ( true ){
-        PcInt::attachInterrupt(pm->pinNumber, pm->void_interruption , pm->flag_interruption, false);
+        int h = 0;
+        //attachPCINT(digitalPinToPCINT( pm->pinNumber ), pm->void_interruption, pm->flag_interruption);
+        //PcInt::attachInterrupt(pm->pinNumber, pinChanged, pm , pm->flag_interruption);
       }
       else{
         err = ERROR_WRONGPCINTPIN;

@@ -1,7 +1,10 @@
 #include <Arduino.h>
 #include "modules/Selector/Selector.h"
 #include "lib/pinModel/pinModel.h"
+#include "PinChangeInterrupt.h"
 // put function declarations here:
+void configuraPinOut();
+void zerocrossdectectorFunc();
 
 #define SV1_PIN PD3
 #define SV2_PIN PD4
@@ -14,9 +17,22 @@
 
 #define TRIGGER_TRIAC_PIN PD5 
 
+#define ZEROCROSSDETECTOR_PIN PD2
 
 struct Selector selectorVoltaje;// Selector de voltaje
 struct pinModel pin_trigger_TRIAC;// disparador para el triac
+struct pinModel pin_zerocrossdetector;// detector de cruce por cero
+
+int countdetector = 0;
+void zerocrossdectectorFunc( )
+{
+  countdetector++;
+  if(countdetector % 2 == 0)
+  {
+    Serial.println(F("Detection"));
+  }
+  digitalWrite( TRIGGER_TRIAC_PIN, !digitalRead(TRIGGER_TRIAC_PIN) );
+}
 
 void configuraPinOut()
 {
@@ -58,4 +74,13 @@ void configuraPinOut()
 
   pinModel_init(&pin_trigger_TRIAC);
 
+  /************************* Pin Zero Cross Detector *****************/
+  pin_zerocrossdetector.pinNumber = ZEROCROSSDETECTOR_PIN;
+  pin_zerocrossdetector.Mode = INPUT_PULLUP;
+  pin_zerocrossdetector.type_read = TYPE_READ_DIGITAL;
+  pin_zerocrossdetector.interruption = INTERRUPTION_ATTACH;
+  pin_zerocrossdetector.flag_interruption = RISING;
+  pin_zerocrossdetector.void_interruption = zerocrossdectectorFunc;
+  pinModel_init(&pin_zerocrossdetector);
+  attachInterrupt(digitalPinToInterrupt(ZEROCROSSDETECTOR_PIN),zerocrossdectectorFunc, RISING);
 }
