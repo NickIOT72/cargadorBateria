@@ -18,6 +18,10 @@ void zerocrossdectectorFunc();
 #define ADC_VOLT80VDC PC0
 #define ADC_POTCARGA PC1
 #define SWITCH_ENCENDIDO_PIN A2
+#define LED_STATUS_INV_PIN PB0
+#define RELAY_TRANSFERENCIA_PIN PB0
+#define RELAY_TRIAC_PIN PD2
+#define HABILITAR_INV_PIN PC3
 
 #define TABLE_48VDC 48
 #define TABLE_36VDC 36
@@ -28,9 +32,13 @@ struct Selector selectorVoltaje;// Selector de voltaje
 struct pinModel pin_trigger_TRIAC;// disparador para el triac
 struct pinModel pin_zerocrossdetector;// detector de cruce por cero
 struct ledModel pin_ledStatusCarga; // Led status de carga;
+struct ledModel pin_ledStatusInv; // Led status de INVERSOR;
+struct ledModel relay_transferencia; // relay de cambio de carga (red publica a inversor)
 struct pinModel pin_volt_80vdc;// lectura adc de carga de bateria
 struct pinModel pin_pot_carga;// lectura adc de carga de bateria
 struct buttonModel switch_encendido;// switch de endendido
+struct ledModel relay_triac; // relay de actiacion de TRIAC;
+struct ledModel pin_habilitar_inversor; // Led status de carga;
 
 int countdetector = 0;
 void zerocrossdectectorFunc( )
@@ -104,6 +112,26 @@ void configuraPinOut()
   pin_ledStatusCarga.delayON = 50;
   ledModel_init( &pin_ledStatusCarga );
 
+  /************************** Pin Led Status Inversor *************************/
+  pin_ledStatusInv.pm.pinNumber = LED_STATUS_INV_PIN;
+  pin_ledStatusInv.pm.Mode = OUTPUT;
+  pin_ledStatusInv.pm.type = TYPE_WRITE_DIGITAL;
+  pin_ledStatusInv.pm.interruption = INTERRUPTION_NONE;
+  pin_ledStatusInv.pm.value = 0;
+  pin_ledStatusInv.delayOFF = 0;
+  pin_ledStatusInv.delayON = 0;
+  ledModel_init( &pin_ledStatusInv );
+
+  /************************** Pin RELAY DE TRANSFERENCIA *************************/
+  relay_transferencia.pm.pinNumber = RELAY_TRANSFERENCIA_PIN;
+  relay_transferencia.pm.Mode = OUTPUT;
+  relay_transferencia.pm.type = TYPE_WRITE_DIGITAL;
+  relay_transferencia.pm.interruption = INTERRUPTION_NONE;
+  relay_transferencia.pm.value = 0;
+  relay_transferencia.delayOFF = 0;
+  relay_transferencia.delayON = 0;
+  ledModel_init( &relay_transferencia );
+
   /************************* Pin adc voltimetro 80vdc *****************/
   pin_volt_80vdc.pinNumber = ADC_VOLT80VDC;
   pin_volt_80vdc.Mode = INPUT;
@@ -127,4 +155,23 @@ void configuraPinOut()
   switch_encendido.countTimePressed = 2000;
   buttonModel_init(&switch_encendido);
 
+  /************************** Pin Relay TRIAC *************************/
+  relay_triac.pm.pinNumber = RELAY_TRIAC_PIN;
+  relay_triac.pm.Mode = OUTPUT;
+  relay_triac.pm.type = TYPE_WRITE_DIGITAL;
+  relay_triac.pm.interruption = INTERRUPTION_NONE;
+  relay_triac.pm.value = 0;
+  relay_triac.delayOFF = 0;
+  relay_triac.delayON = 0;
+  ledModel_init( &relay_triac );
+
+  /************************** Pin Habiliatar Inversor *************************/
+  pin_habilitar_inversor.pm.pinNumber = HABILITAR_INV_PIN;
+  pin_habilitar_inversor.pm.Mode = OUTPUT;
+  pin_habilitar_inversor.pm.type = TYPE_WRITE_DIGITAL;
+  pin_habilitar_inversor.pm.interruption = INTERRUPTION_NONE;
+  pin_habilitar_inversor.pm.value = 0;
+  pin_habilitar_inversor.delayOFF = 0;
+  pin_habilitar_inversor.delayON = 0;
+  ledModel_init( &pin_habilitar_inversor );
 }
