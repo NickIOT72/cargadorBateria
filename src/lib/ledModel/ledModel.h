@@ -4,14 +4,6 @@
 #include <Arduino.h>
 #include "lib/pinModel/pinModel.h"
 
-#define TYPE_READ_NONE 0 
-#define TYPE_READ_DIGITAL 1
-#define TYPE_READ_ANALOG 2
-
-#define INTERRUPTION_NONE 0
-#define INTERRUPTION_ATTACH 1
-#define INTERRUPTION_PCINT 2
-
 struct ledModel
 {
   struct pinModel pm;

@@ -16,3 +16,5 @@
 
 uint16_t adc_80vdc_val  =0;
 uint16_t adc_pot_carga = 0;
+
+//adc_pot_carga =  pin_pot_carga.value<=FROMMIN_POTCARGA?TOMIN_POTCARGA:  pin_pot_carga.value>=FROMMAX_POTCARGA?TOMAX_POTCARGA: map( pin_pot_carga.value, FROMMIN_POTCARGA, FROMMAX_POTCARGA, TOMIN_POTCARGA, TOMAX_POTCARGA);

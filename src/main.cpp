@@ -1,19 +1,22 @@
 #include "main.h"
 
 void setup() {
+  // put your setup code here, to run once:
   Serial.begin(9600);
   configuraPinOut();
-  // put your setup code here, to run once:
+  buttonModel_initCountTime(&switch_encendido);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  pinModel_getPinValue(&pin_pot_carga);
-  adc_pot_carga =  pin_pot_carga.value<=FROMMIN_POTCARGA?TOMIN_POTCARGA:  pin_pot_carga.value>=FROMMAX_POTCARGA?TOMAX_POTCARGA: map( pin_pot_carga.value, FROMMIN_POTCARGA, FROMMAX_POTCARGA, TOMIN_POTCARGA, TOMAX_POTCARGA);
-  Serial.print("Volt: ");
-  Serial.print(pin_pot_carga.value);
-  Serial.print(" , ");
-  Serial.print(adc_pot_carga);
-  Serial.println(" Vdc");
-  delay(1000);
+  buttonModel_verifyCountTime(&switch_encendido);
+  if ( switch_encendido.lastvalue == LOW  && switch_encendido.counterPressed >= 1 && !switch_encendido.actualState )
+  {
+    ledModel_ON(&pin_ledStatusCarga);
+  }
+  else if (switch_encendido.lastvalue == HIGH && switch_encendido.counterNoPressed >= 1 && !switch_encendido.actualState )
+  {
+    ledModel_OFF(&pin_ledStatusCarga);
+  }
+  delay(50);
 }

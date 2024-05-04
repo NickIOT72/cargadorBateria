@@ -3,6 +3,7 @@
 #include "modules/Selector/Selector.h"
 #include "lib/pinModel/pinModel.h"
 #include "lib/ledModel/ledModel.h"
+#include "lib/buttonModel/buttonModel.h"
 
 #include "PinChangeInterrupt.h"
 // put function declarations here:
@@ -11,18 +12,17 @@ void zerocrossdectectorFunc();
 
 #define SV1_PIN PD3
 #define SV2_PIN PD4
-
-#define TABLE_48VDC 48
-#define TABLE_36VDC 36
-#define TABLE_24VDC 24
-#define TABLE_12VDC 12
-
-
 #define TRIGGER_TRIAC_PIN PD5 
 #define ZEROCROSSDETECTOR_PIN PD2
 #define LEDSTATUSCARGA_PIN PD7
 #define ADC_VOLT80VDC PC0
 #define ADC_POTCARGA PC1
+#define SWITCH_ENCENDIDO_PIN A2
+
+#define TABLE_48VDC 48
+#define TABLE_36VDC 36
+#define TABLE_24VDC 24
+#define TABLE_12VDC 12
 
 struct Selector selectorVoltaje;// Selector de voltaje
 struct pinModel pin_trigger_TRIAC;// disparador para el triac
@@ -30,6 +30,7 @@ struct pinModel pin_zerocrossdetector;// detector de cruce por cero
 struct ledModel pin_ledStatusCarga; // Led status de carga;
 struct pinModel pin_volt_80vdc;// lectura adc de carga de bateria
 struct pinModel pin_pot_carga;// lectura adc de carga de bateria
+struct buttonModel switch_encendido;// switch de endendido
 
 int countdetector = 0;
 void zerocrossdectectorFunc( )
@@ -116,4 +117,14 @@ void configuraPinOut()
   pin_pot_carga.type = TYPE_READ_ANALOG;
   pin_pot_carga.interruption = INTERRUPTION_NONE;
   pinModel_init(&pin_pot_carga);
+
+  /************************* Pin switch encendido *****************/
+  switch_encendido.pm.pinNumber = SWITCH_ENCENDIDO_PIN;
+  switch_encendido.pm.Mode = INPUT_PULLUP;
+  switch_encendido.pm.type = TYPE_READ_DIGITAL;
+  switch_encendido.pm.interruption = INTERRUPTION_NONE;
+  switch_encendido.pm.value = 0;
+  switch_encendido.countTimePressed = 2000;
+  buttonModel_init(&switch_encendido);
+
 }
