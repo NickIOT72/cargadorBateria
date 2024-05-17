@@ -20,6 +20,7 @@ int ledModel_ON(struct ledModel *lm );
 int ledModel_OFF(struct ledModel *lm );
 int ledModel_Toggle(struct ledModel *lm );
 int ledModel_verifyBlink(struct ledModel *lm );
+int ledModel_verifyBlinkMicro(struct ledModel *lm );
 int ledModel_setPWM(struct ledModel *lm  );
 int ledModel_setBlink(struct ledModel *lm );
 int ledModel_quitBlink(struct ledModel *lm );

@@ -101,7 +101,6 @@ int pinModel_getPinValue( struct pinModel *pm )
     if (  pm->type == TYPE_READ_DIGITAL )
     {
       pm->value = digitalRead( pm->pinNumber );
-      Serial.println(pm->value);
     }
     else if (  pm->type == TYPE_READ_ANALOG )
     {

@@ -49,6 +49,36 @@ int ledModel_setPWM(struct ledModel *lm )
   return err;
 }
 
+int ledModel_verifyBlinkMicro(struct ledModel *lm )
+{
+  int err = -1;
+  if (  lm->pm.type == TYPE_WRITE_DIGITAL && lm->allowBlink )
+  {
+    if ( lm->pm.value == LOW )
+    {
+      if ( micros() >= lm->tsart + lm->delayOFF  )
+      {
+        ledModel_ON(lm);
+        ledModel_setBlink(lm);
+      }
+    }
+    else if ( lm->pm.value == HIGH )
+    {
+      if ( micros() >= lm->tsart + lm->delayON  )
+      {
+        ledModel_OFF(lm);
+        ledModel_setBlink(lm);
+      }
+    }
+  }
+  else
+  {
+    return 0;
+  }
+  return err;
+}
+
+
 int ledModel_verifyBlink(struct ledModel *lm )
 {
   int err = -1;

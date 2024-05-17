@@ -12,16 +12,16 @@ void zerocrossdectectorFunc();
 
 #define SV1_PIN PD3
 #define SV2_PIN PD4
-#define TRIGGER_TRIAC_PIN PD5 
+#define TRIGGER_TRIAC_PIN 5 
 #define ZEROCROSSDETECTOR_PIN PD2
 #define LEDSTATUSCARGA_PIN PD7
-#define ADC_VOLT80VDC PC0
-#define ADC_POTCARGA PC1
+#define ADC_VOLT80VDC A0
+#define ADC_POTCARGA A1
 #define SWITCH_ENCENDIDO_PIN A2
-#define LED_STATUS_INV_PIN PB0
-#define RELAY_TRANSFERENCIA_PIN PB0
-#define RELAY_TRIAC_PIN PD2
-#define HABILITAR_INV_PIN PC3
+#define LED_STATUS_INV_PIN 8
+#define RELAY_TRANSFERENCIA_PIN 9
+#define RELAY_TRIAC_PIN PD6
+#define HABILITAR_INV_PIN A3
 
 #define TABLE_48VDC 48
 #define TABLE_36VDC 36
@@ -29,7 +29,7 @@ void zerocrossdectectorFunc();
 #define TABLE_12VDC 12
 
 struct Selector selectorVoltaje;// Selector de voltaje
-struct pinModel pin_trigger_TRIAC;// disparador para el triac
+struct ledModel pin_trigger_TRIAC;// disparador para el triac
 struct pinModel pin_zerocrossdetector;// detector de cruce por cero
 struct ledModel pin_ledStatusCarga; // Led status de carga;
 struct ledModel pin_ledStatusInv; // Led status de INVERSOR;
@@ -39,17 +39,6 @@ struct pinModel pin_pot_carga;// lectura adc de carga de bateria
 struct buttonModel switch_encendido;// switch de endendido
 struct ledModel relay_triac; // relay de actiacion de TRIAC;
 struct ledModel pin_habilitar_inversor; // Led status de carga;
-
-int countdetector = 0;
-void zerocrossdectectorFunc( )
-{
-  countdetector++;
-  if(countdetector % 2 == 0)
-  {
-    Serial.println(F("Detection"));
-  }
-  digitalWrite( TRIGGER_TRIAC_PIN, !digitalRead(TRIGGER_TRIAC_PIN) );
-}
 
 void configuraPinOut()
 {
@@ -84,13 +73,15 @@ void configuraPinOut()
 
 
   /************************* Pin trigger TRIAC *****************/
-  pin_trigger_TRIAC.pinNumber = TRIGGER_TRIAC_PIN;
-  pin_trigger_TRIAC.Mode = OUTPUT;
-  pin_trigger_TRIAC.type = TYPE_WRITE_DIGITAL;
-  pin_trigger_TRIAC.value = 0;
-  pin_trigger_TRIAC.interruption = INTERRUPTION_NONE;
+  pin_trigger_TRIAC.pm.pinNumber = TRIGGER_TRIAC_PIN;
+  pin_trigger_TRIAC.pm.Mode = OUTPUT;
+  pin_trigger_TRIAC.pm.type = TYPE_WRITE_DIGITAL;
+  pin_trigger_TRIAC.pm.value = 0;
+  pin_trigger_TRIAC.pm.interruption = INTERRUPTION_NONE;
 
-  pinModel_init(&pin_trigger_TRIAC);
+  pin_trigger_TRIAC.delayOFF = 0;
+  pin_trigger_TRIAC.delayON = 0;
+  ledModel_init(&pin_trigger_TRIAC);
 
   /************************* Pin Zero Cross Detector *****************/
   pin_zerocrossdetector.pinNumber = ZEROCROSSDETECTOR_PIN;
@@ -101,6 +92,7 @@ void configuraPinOut()
   pin_zerocrossdetector.void_interruption = zerocrossdectectorFunc;
   pinModel_init(&pin_zerocrossdetector);
   attachInterrupt(digitalPinToInterrupt(ZEROCROSSDETECTOR_PIN),zerocrossdectectorFunc, RISING);
+  //attachPCINT( digitalPinToPCINT(ZEROCROSSDETECTOR_PIN) , zerocrossdectectorFunc,  RISING );
 
   /************************** Pin Led Status Carga *************************/
   pin_ledStatusCarga.pm.pinNumber = LEDSTATUSCARGA_PIN;

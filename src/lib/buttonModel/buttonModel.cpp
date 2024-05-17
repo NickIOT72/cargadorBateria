@@ -17,7 +17,6 @@ int buttonModel_getValue( struct buttonModel *bm )
   int err = -1;
   bm->lastvalue = bm->pm.value;
   err = pinModel_getPinValue( &bm->pm  );
-  Serial.println(bm->pm.value);
   if( bm->lastvalue != bm->pm.value ) buttonModel_resetCountTime( bm );
   return err;
 }
@@ -77,7 +76,5 @@ int buttonModel_resetCountTime( struct buttonModel *bm )
   int err = -1;
   bm->tsart = millis();
   bm->actualState = true;
-  Serial.print("State changed:");
-  Serial.println( bm->lastvalue, DEC );
   return err;
 }
